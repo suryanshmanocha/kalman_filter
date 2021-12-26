@@ -8,16 +8,17 @@
 #endif //KALMAN_FILTER_MAIN_HPP
 
 #include <iostream>
+#include <fstream>
 #include "eigen/Eigen/Dense"
 
 using Eigen::Matrix2d;
 using Eigen::Vector2d;
 using Eigen::Vector3d;
 
-static constexpr double IR_PROCESS_ERR = 0.2;
-static constexpr double IMU_PROCESS_ERR = 0.5;
+static constexpr double IR_PROCESS_ERR = 2;
+static constexpr double IMU_PROCESS_ERR = 2;
 
-static constexpr double IR_UNCERTAINTY = 3;
+static constexpr double IR_UNCERTAINTY = 10;
 static constexpr double IMU_UNCERTAINTY = 5;
 
 static constexpr double TIME_DELTA = 1.0;
@@ -25,13 +26,12 @@ static constexpr double TIME_DELTA = 1.0;
 class KalmanFilter {
     public:
         /* Attributes */
-        Vector3d initialConditions_M = Vector3d(0, 0, 0);
         Vector2d previousState_M;
-        Vector2d newState_M;
         Matrix2d previousErrorCovariance_M;
-        Matrix2d newErrorCovariance_M;
+        std::ofstream myfile;
+        int iteration;
         /* Constructor */
-        KalmanFilter(double displacement, double velocity, double acceleration);
+        KalmanFilter(double displacement, double velocity);
         /* Methods */
         Vector2d getEstimate(double displacement, double velocity, double acceleration);
     private:

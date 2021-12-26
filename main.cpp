@@ -1,13 +1,18 @@
 #include "main.hpp"
 #include <math.h>
+#include <sstream>
 
 
-KalmanFilter::KalmanFilter(double displacement, double velocity, double acceleration) {
+KalmanFilter::KalmanFilter(double displacement, double velocity) {
+    iteration = 0;
     previousState_M = Vector2d(displacement, velocity);
     previousErrorCovariance_M = calculateInitialErrorCovariance();
+    myfile.open ("kalman_estimates_displacement.csv");
+    myfile << "Time,Measurement,Prediction,KalmanEstimate" << std::endl;
 }
 
 Vector2d KalmanFilter::getEstimate(double displacement, double velocity, double acceleration) {
+    iteration++;
     // From actual measurements
     Vector2d measurementInput_M = getMeasurementInput(displacement, velocity);  // Y_k
     Matrix2d measurementCovar_M = getMeasurementCovariance();                   // R
@@ -28,6 +33,9 @@ Vector2d KalmanFilter::getEstimate(double displacement, double velocity, double 
     previousState_M = kalmanEstimate_M;
     previousErrorCovariance_M = (identity_M - kalmanGain_M) * predictedCovar_M; // (I - K) * P_(k_p)
 
+    std::stringstream ss;
+    ss << iteration*TIME_DELTA << ',' << measurementInput_M.x() << ',' << predictedInput_M.x() << ',' << kalmanEstimate_M.x() << std::endl;
+    myfile << ss.str();
     return kalmanEstimate_M;
 }
 
@@ -110,11 +118,13 @@ const Matrix2d KalmanFilter::getMeasurementCovariance() {
 }
 
 int main() {
-    KalmanFilter kalmanFilter(100, 10, 0);
-    kalmanFilter.getEstimate(112, 10, 0);
-    kalmanFilter.getEstimate(123, 10, 0);
-    kalmanFilter.getEstimate(131, 10, 2);
-    kalmanFilter.getEstimate(173, 12, 5);
+    KalmanFilter kalmanFilter(100, 10);
+    kalmanFilter.getEstimate(115, 10, 0);
+    kalmanFilter.getEstimate(130, 10, 0);
+    kalmanFilter.getEstimate(145, 10, 0);
+    kalmanFilter.getEstimate(155, 10, 0);
+    kalmanFilter.getEstimate(163, 10, 0);
+    kalmanFilter.getEstimate(175, 10, 0);
 }
 
 
