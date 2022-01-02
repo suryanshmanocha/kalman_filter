@@ -50,8 +50,8 @@ Vector2d KalmanFilter::getEstimate(double displacement, double velocity, double 
  */
 Vector2d KalmanFilter::calculatePrediction(double acceleration) {
     // 1/2 * t^2
-    const Vector2d transformAcceleration_M = Vector2d(0.5 * pow(TIME_DELTA, 2), TIME_DELTA);
-    const Vector2d error_M = Vector2d(0, 0);
+    const Vector2d transformAcceleration_M(0.5 * pow(TIME_DELTA, 2), TIME_DELTA);
+    const Vector2d error_M(0, 0);
 
     return (transform_M * previousState_M) + (transformAcceleration_M * acceleration) + error_M;
 }
@@ -96,8 +96,8 @@ Vector2d KalmanFilter::calculateNewState(Vector2d predictedInput_M, Matrix2d kal
  */
 Vector2d KalmanFilter::getMeasurementInput(double displacement, double velocity) {
     const Matrix2d transform_M = (Matrix2d() << 1, 0, 0, 1).finished();
-    const Vector2d noise_M = Vector2d(0, 0);
-    Vector2d measurement_M = Vector2d(displacement, velocity);
+    const Vector2d noise_M(0, 0);
+    Vector2d measurement_M(displacement, velocity);
     return (transform_M * measurement_M) + noise_M;
 }
 
@@ -105,7 +105,7 @@ Vector2d KalmanFilter::getMeasurementInput(double displacement, double velocity)
  * Of form: P_0
  * @return
  */
-const Matrix2d KalmanFilter::calculateInitialErrorCovariance() {
+Matrix2d KalmanFilter::calculateInitialErrorCovariance() {
     return (Matrix2d() << pow(IR_PROCESS_ERR, 2), IR_PROCESS_ERR * IMU_PROCESS_ERR, IR_PROCESS_ERR * IMU_PROCESS_ERR, pow(IMU_PROCESS_ERR, 2)).finished();
 }
 
@@ -113,7 +113,7 @@ const Matrix2d KalmanFilter::calculateInitialErrorCovariance() {
  * Of form: R
  * @return
  */
-const Matrix2d KalmanFilter::getMeasurementCovariance() {
+Matrix2d KalmanFilter::getMeasurementCovariance() {
     return (Matrix2d() << pow(IR_UNCERTAINTY, 2), IR_UNCERTAINTY * IMU_UNCERTAINTY, IR_UNCERTAINTY * IMU_UNCERTAINTY, pow(IMU_UNCERTAINTY, 2)).finished();
 }
 
