@@ -5,7 +5,6 @@
 #ifndef KALMAN_FILTER_MAIN_HPP
 #define KALMAN_FILTER_MAIN_HPP
 
-#endif //KALMAN_FILTER_MAIN_HPP
 
 #include <iostream>
 #include <fstream>
@@ -43,6 +42,8 @@ class KalmanFilter {
         Matrix2d calculateKalmanGain(Matrix2d predictedCovar_M, Matrix2d measurementCovar_M);
         Vector2d calculateNewState(Vector2d predictedInput_M, Matrix2d kalmanGain, Vector2d measurementInput_M);
         Vector2d getMeasurementInput(double displacement, double velocity);
-        const Matrix2d calculateInitialErrorCovariance();
-        const Matrix2d getMeasurementCovariance();
+        Matrix2d calculateInitialErrorCovariance();
+        Matrix2d getMeasurementCovariance();
 };
+
+#endif //KALMAN_FILTER_MAIN_HPP
